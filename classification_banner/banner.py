@@ -6,20 +6,48 @@ class AlwaysOnBanner(Gtk.Window):
     def __init__(self):
         super().__init__()
         self.set_title("Classification Banner")
-        self.set_default_size(1920, 50)
+        self.set_default_size(1920, 10)  # Rectangle: 1920px width, 40px height
 
+        # Remove window decorations and make it always on top
         self.set_decorated(False)
         self.set_keep_above(True)
         self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
 
+        # Set a fixed position at the top of the screen
         self.move(0, 0)
 
-        label = Gtk.Label(label="TOP SECRET")
+        # Remove any potential invisible border
+        self.set_border_width(0)
+
+        # Assign a CSS name to the window
+        self.set_name("banner-window")
+
+        # Create the banner label
+        label = Gtk.Label(label="CLASSIFICATION: TOP SECRET")
         label.set_justify(Gtk.Justification.CENTER)
-        label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        label.set_name("banner-label")  # Name the label for CSS styling
 
-        self.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 0.0, 0.0, 1.0))
+        # Apply CSS styling
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(
+            b"""
+            #banner-window {
+                background-color: red;
+            }
+            #banner-label {
+                color: white;
+                font-weight: bold;
+                font-size: 10px;
+            }
+            """
+        )
+        screen = Gdk.Screen.get_default()
+        style_context = Gtk.StyleContext()
+        style_context.add_provider_for_screen(
+            screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
+        # Add the label to the window
         self.add(label)
 
     def run(self):
