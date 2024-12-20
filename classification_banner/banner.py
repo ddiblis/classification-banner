@@ -166,19 +166,3 @@
 
 #     app.connect("activate", on_activate)
 #     app.run()
-
-
-import gi
-gi.require_version('Gtk', '4.0')
-from gi.repository import Gtk
-
-app = Gtk.Application(application_id='org.classification-banner.myapp')
-
-def on_activate(app):
-    win = Gtk.ApplicationWindow(application=app)
-    win.set_title("Top Secret")
-    win.set_default_size(400, 300)
-    win.present()
-
-app.connect('activate', on_activate)
-app.run(None)
