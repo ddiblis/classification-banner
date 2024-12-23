@@ -44,5 +44,10 @@ environments such as GNOME2, GNOME3, KDE, twm, icewm, and Cinnamon.""",
         "Topic :: Security",
     ],
     packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'classification-banner=classification_banner.banner:main',
+        ],
+    },
     scripts=["bin/classification-banner"],
 )

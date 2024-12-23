@@ -8,7 +8,6 @@ from distutils.util import strtobool
 
 CONF_FILE = "/etc/classification-banner/banner.conf"
 
-# Check if DISPLAY variable is set
 try:
     os.environ["DISPLAY"]
 except KeyError:
@@ -35,7 +34,6 @@ def configure():
     for key, val in conf.items("global"):
         defaults[key] = val
 
-    # Use the global config to set defaults for command line options
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--message", default=defaults["message"],  
                         help="Set the Classification message")
@@ -113,14 +111,6 @@ class AlwaysOnBanner(Gtk.Window):
         )
 
         self.add(label)
-
-        self.connect("realize", self.on_realize)
-
-    def on_realize(self, widget):
-        # Make the window click-through after it is realized
-        self.get_window().set_override_redirect(True)
-        self.set_accept_focus(False)
-        self.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
     def show_banner(self):
         self.show_all()

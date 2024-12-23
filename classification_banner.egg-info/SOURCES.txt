@@ -1,0 +1,13 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+bin/classification-banner
+classification_banner/__init__.py
+classification_banner/banner.old.py
+classification_banner/banner.py
+classification_banner.egg-info/PKG-INFO
+classification_banner.egg-info/SOURCES.txt
+classification_banner.egg-info/dependency_links.txt
+classification_banner.egg-info/entry_points.txt
+classification_banner.egg-info/top_level.txt
