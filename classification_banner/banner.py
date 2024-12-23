@@ -3,6 +3,7 @@ import os
 import cairo
 import argparse
 import configparser
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
 
@@ -14,25 +15,96 @@ if "DISPLAY" not in os.environ:
     print("Error: DISPLAY environment variable is not set.")
     exit(1)
 
+# Preset configurations
+PRESETS = {
+    "u": {"message": "UNCLASSIFIED", "fgcolor": "#FFFFFF", "bgcolor": "#007A33"},
+    "confidential": {
+        "message": "CONFIDENTIAL",
+        "fgcolor": "#FFFFFF",
+        "bgcolor": "#0033A0",
+    },
+    "secret": {"message": "SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#C8102E"},
+    "ts": {"message": "TOP SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#FF671F"},
+    "ts-sci": {
+        "message": "TOP SECRET//SCI",
+        "fgcolor": "#000000",
+        "bgcolor": "#F7EA48",
+    },
+}
+
+
 def configure():
     """Read global configuration and parse command-line arguments."""
+    # Read configuration file
     conf = configparser.ConfigParser()
     conf.read(CONF_FILE)
 
+    # Set default values from the configuration or fallbacks
     defaults = {
         "message": conf.get("global", "message", fallback="UNCLASSIFIED"),
         "fgcolor": conf.get("global", "fgcolor", fallback="#FFFFFF"),
         "bgcolor": conf.get("global", "bgcolor", fallback="#007A33"),
-        "style": conf.get("global", "style", fallback="Modern")
+        "style": conf.get("global", "style", fallback="Modern"),
     }
 
+    # Argument parsing
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--message", default=defaults["message"], help="Set the Classification message")
-    parser.add_argument("-f", "--fgcolor", default=defaults["fgcolor"], help="Set the Foreground (text) color")
-    parser.add_argument("-b", "--bgcolor", default=defaults["bgcolor"], help="Set the Background color")
-    parser.add_argument("-s", "--style", default=defaults["style"], help="Style of banner, set between Modern and Classic")
+    parser.add_argument(
+        "-M",
+        "--message",
+        default=defaults["message"],
+        help="Set the Classification message",
+    )
+    parser.add_argument(
+        "-F",
+        "--fgcolor",
+        default=defaults["fgcolor"],
+        help="Set the Foreground (text) color",
+    )
+    parser.add_argument(
+        "-B", "--bgcolor", default=defaults["bgcolor"], help="Set the Background color"
+    )
+    parser.add_argument(
+        "-S",
+        "--style",
+        default=defaults["style"],
+        help="Style of banner, set between Modern and Classic",
+    )
 
-    return parser.parse_args()
+    # Flags for preset configurations
+    parser.add_argument(
+        "-u", "--unclassified", action="store_true", help="Set to UNCLASSIFIED"
+    )
+    parser.add_argument(
+        "-ts", "--top-secret", action="store_true", help="Set to TOP SECRET"
+    )
+    parser.add_argument(
+        "-c", "--confidential", action="store_true", help="Set to CONFIDENTIAL"
+    )
+    parser.add_argument("-s", "--secret", action="store_true", help="Set to SECRET")
+    parser.add_argument(
+        "-tssci", "--ts-sci", action="store_true", help="Set to TOP SECRET//SCI"
+    )
+
+    args = parser.parse_args()
+
+    # Apply the preset values based on the flags
+    preset_flags = {
+        "unclassified": "u",
+        "top_secret": "ts",
+        "confidential": "confidential",
+        "secret": "secret",
+        "ts_sci": "ts_sci",
+    }
+
+    # Check each flag and apply the corresponding preset
+    for flag, key in preset_flags.items():
+        if getattr(args, flag):  # Check for the presence of the flag in the args object
+            args.message, args.fgcolor, args.bgcolor = PRESETS[key].values()
+            break
+
+    return args
+
 
 class AlwaysOnBanner(Gtk.Window):
     def __init__(self, position, monitor, message, fgcolor, bgcolor, style):
@@ -40,7 +112,10 @@ class AlwaysOnBanner(Gtk.Window):
         self.set_title("Classification Banner")
         self.display = Gdk.Display.get_default()
         self.geometry = monitor.get_geometry()
-        self.screen_height, self.screen_width = self.geometry.height, self.geometry.width
+        self.screen_height, self.screen_width = (
+            self.geometry.height,
+            self.geometry.width,
+        )
 
         font_size = 15 if style == "Modern" else 12
         self.css = self.create_css(fgcolor, bgcolor, font_size)
@@ -67,7 +142,9 @@ class AlwaysOnBanner(Gtk.Window):
                 font-weight: bold;
                 font-size: {font_size}px;
             }}
-        """.encode('utf-8')
+        """.encode(
+            "utf-8"
+        )
 
     def setup_window(self, position, adjusted_width, style):
         if style == "Modern":
@@ -88,8 +165,10 @@ class AlwaysOnBanner(Gtk.Window):
         if position == "top":
             self.move(self.geometry.x, self.geometry.y + 45)
         elif position == "bottom":
-            self.move(self.geometry.x + self.screen_width - adjusted_width,
-                      self.geometry.y + self.screen_height - 45)
+            self.move(
+                self.geometry.x + self.screen_width - adjusted_width,
+                self.geometry.y + self.screen_height - 45,
+            )
 
     def apply_css(self):
         css_provider = Gtk.CssProvider()
@@ -97,7 +176,9 @@ class AlwaysOnBanner(Gtk.Window):
 
         style_context = Gtk.StyleContext()
         style_context.add_provider_for_screen(
-            Gdk.Screen.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            Gdk.Screen.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
 
     def make_click_through(self):
@@ -111,6 +192,7 @@ class AlwaysOnBanner(Gtk.Window):
         self.show_all()
         self.make_click_through()
 
+
 def main():
     options = configure()
     display = Gdk.Display.get_default()
@@ -119,15 +201,30 @@ def main():
     banners = []
     for i in range(num_monitors):
         monitor = display.get_monitor(i)
-        top_banner = AlwaysOnBanner("top", monitor, options.message, options.fgcolor, options.bgcolor, options.style)
+        top_banner = AlwaysOnBanner(
+            "top",
+            monitor,
+            options.message,
+            options.fgcolor,
+            options.bgcolor,
+            options.style,
+        )
         top_banner.show_banner()
         banners.append(top_banner)
 
         if options.style == "Modern":
-            bottom_banner = AlwaysOnBanner("bottom", monitor, options.message, options.fgcolor, options.bgcolor, options.style)
+            bottom_banner = AlwaysOnBanner(
+                "bottom",
+                monitor,
+                options.message,
+                options.fgcolor,
+                options.bgcolor,
+                options.style,
+            )
             bottom_banner.show_banner()
             banners.append(bottom_banner)
     Gtk.main()
+
 
 if __name__ == "__main__":
     main()
@@ -140,7 +237,7 @@ if __name__ == "__main__":
 #     def __init__(self, position):
 #         super().__init__()
 #         self.set_title("Classification Banner")
-        
+
 #         display = Gdk.Display.get_default()
 #         monitor = display.get_primary_monitor()
 #         geometry = monitor.get_geometry()
@@ -188,7 +285,7 @@ if __name__ == "__main__":
 #             """
 #         )
 #         css_provider.load_from_data(css_data)
-        
+
 #         Gtk.StyleContext.add_provider_for_display(
 #             display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
 #         )
