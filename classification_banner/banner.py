@@ -5,62 +5,60 @@ import argparse
 import configparser
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
-from distutils.util import strtobool
+
 
 CONF_FILE = "/etc/classification-banner/banner.conf"
 
-try:
-    os.environ["DISPLAY"]
-except KeyError:
+# Check for DISPLAY environment variable
+if "DISPLAY" not in os.environ:
     print("Error: DISPLAY environment variable is not set.")
-    sys.exit(1)
-
-try:
-    import gi
-    gi.require_version('Gtk', '3.0')
-    from gi.repository import Gtk, Gdk
-except ImportError as e:
-    raise e
+    exit(1)
 
 def configure():
-    """Read Global configuration"""
-    defaults = {}
-    defaults["message"] = "UNCLASSIFIED"
-    defaults["fgcolor"] = "#FFFFFF"
-    defaults["bgcolor"] = "#007A33"
-    defaults["style"] = "Modern"
-
+    """Read global configuration and parse command-line arguments."""
     conf = configparser.ConfigParser()
     conf.read(CONF_FILE)
-    for key, val in conf.items("global"):
-        defaults[key] = val
+
+    defaults = {
+        "message": conf.get("global", "message", fallback="UNCLASSIFIED"),
+        "fgcolor": conf.get("global", "fgcolor", fallback="#FFFFFF"),
+        "bgcolor": conf.get("global", "bgcolor", fallback="#007A33"),
+        "style": conf.get("global", "style", fallback="Modern")
+    }
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--message", default=defaults["message"],  
-                        help="Set the Classification message")
-    parser.add_argument("-f", "--fgcolor", default=defaults["fgcolor"],
-                        help="Set the Foreground (text) color")
-    parser.add_argument("-b", "--bgcolor", default=defaults["bgcolor"],
-                        help="Set the Background color")
-    parser.add_argument("-s", "--style", default=defaults["style"],
-                        help="Style of banner, set between Modern and Classic")
+    parser.add_argument("-m", "--message", default=defaults["message"], help="Set the Classification message")
+    parser.add_argument("-f", "--fgcolor", default=defaults["fgcolor"], help="Set the Foreground (text) color")
+    parser.add_argument("-b", "--bgcolor", default=defaults["bgcolor"], help="Set the Background color")
+    parser.add_argument("-s", "--style", default=defaults["style"], help="Style of banner, set between Modern and Classic")
 
-    args = parser.parse_args()
-
-    return args
-
+    return parser.parse_args()
 
 class AlwaysOnBanner(Gtk.Window):
-    def __init__(self, position, monitor, message="UNCLASSIFIED", fgcolor="#FFFFFF",
-                 bgcolor="#007A33", style="Modern"):
+    def __init__(self, position, monitor, message, fgcolor, bgcolor, style):
         super().__init__()
         self.set_title("Classification Banner")
         self.display = Gdk.Display.get_default()
         self.geometry = monitor.get_geometry()
-        self.screen_height = self.geometry.height
-        self.screen_width = self.geometry.width
+        self.screen_height, self.screen_width = self.geometry.height, self.geometry.width
+
         font_size = 15 if style == "Modern" else 12
-        self.css = f"""
+        self.css = self.create_css(fgcolor, bgcolor, font_size)
+
+        adjusted_width = self.screen_width // 15
+        self.setup_window(position, adjusted_width, style)
+
+        label = Gtk.Label(label=message)
+        label.set_justify(Gtk.Justification.CENTER)
+        label.set_name("banner-label")
+
+        self.apply_css()
+
+        self.add(label)
+        self.make_click_through()
+
+    def create_css(self, fgcolor, bgcolor, font_size):
+        return f"""
             #banner-window {{
                 background-color: {bgcolor};
             }}
@@ -69,38 +67,31 @@ class AlwaysOnBanner(Gtk.Window):
                 font-weight: bold;
                 font-size: {font_size}px;
             }}
-            """.encode('utf-8')
+        """.encode('utf-8')
 
-        adjusted_width = self.screen_width / 15
-
+    def setup_window(self, position, adjusted_width, style):
         if style == "Modern":
             self.set_default_size(adjusted_width, 15)
+            self.move_banner(position, adjusted_width)
         else:
             self.set_default_size(self.screen_width, 10)
+            if position == "top":
+                self.move(self.geometry.x, self.geometry.y)
 
         self.set_decorated(False)
         self.set_keep_above(True)
         self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
-
-        if style == "Modern":
-            if position == "top":
-                self.move(self.geometry.x, self.geometry.y + 45)
-            elif position == "bottom":
-                self.move(
-                    self.geometry.x + self.screen_width - adjusted_width,
-                    self.geometry.y + self.screen_height - 45
-                )
-        else:
-            if position == "top":
-                self.move(self.geometry.x, self.geometry.y)
-
         self.set_border_width(0)
         self.set_name("banner-window")
 
-        label = Gtk.Label(label=message)
-        label.set_justify(Gtk.Justification.CENTER)
-        label.set_name("banner-label")
+    def move_banner(self, position, adjusted_width):
+        if position == "top":
+            self.move(self.geometry.x, self.geometry.y + 45)
+        elif position == "bottom":
+            self.move(self.geometry.x + self.screen_width - adjusted_width,
+                      self.geometry.y + self.screen_height - 45)
 
+    def apply_css(self):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(self.css)
 
@@ -108,11 +99,6 @@ class AlwaysOnBanner(Gtk.Window):
         style_context.add_provider_for_screen(
             Gdk.Screen.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
-
-        self.add(label)
-
-        # Apply input shape immediately
-        self.make_click_through()
 
     def make_click_through(self):
         """Set the input shape of the window to make it click-through."""
@@ -125,7 +111,7 @@ class AlwaysOnBanner(Gtk.Window):
         self.show_all()
         self.make_click_through()
 
-if __name__ == "__main__":
+def main():
     options = configure()
     display = Gdk.Display.get_default()
     num_monitors = display.get_n_monitors()
@@ -133,32 +119,18 @@ if __name__ == "__main__":
     banners = []
     for i in range(num_monitors):
         monitor = display.get_monitor(i)
-        top_banner = AlwaysOnBanner(
-            "top",
-            monitor,
-            message=options.message,
-            bgcolor=options.bgcolor,
-            fgcolor=options.fgcolor,
-            style=options.style)
-
+        top_banner = AlwaysOnBanner("top", monitor, options.message, options.fgcolor, options.bgcolor, options.style)
         top_banner.show_banner()
-        if options.style == "Modern":
-            bottom_banner = AlwaysOnBanner(
-                "bottom",
-                monitor,
-                message=options.message,
-                bgcolor=options.bgcolor,
-                fgcolor=options.fgcolor,
-                style=options.style)
-            bottom_banner.show_banner()
-            banners.append(bottom_banner)
-
-
         banners.append(top_banner)
 
+        if options.style == "Modern":
+            bottom_banner = AlwaysOnBanner("bottom", monitor, options.message, options.fgcolor, options.bgcolor, options.style)
+            bottom_banner.show_banner()
+            banners.append(bottom_banner)
     Gtk.main()
 
-
+if __name__ == "__main__":
+    main()
 
 # import gi
 # gi.require_version("Gtk", "4.0")
