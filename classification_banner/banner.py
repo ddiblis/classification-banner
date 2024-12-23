@@ -25,7 +25,7 @@ PRESETS = {
     },
     "secret": {"message": "SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#C8102E"},
     "ts": {"message": "TOP SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#FF671F"},
-    "ts-sci": {
+    "ts_sci": {
         "message": "TOP SECRET//SCI",
         "fgcolor": "#000000",
         "bgcolor": "#F7EA48",
@@ -83,7 +83,7 @@ def configure():
     )
     parser.add_argument("-s", "--secret", action="store_true", help="Set to SECRET")
     parser.add_argument(
-        "-tssci", "--ts-sci", action="store_true", help="Set to TOP SECRET//SCI"
+        "-tssci", "--ts_sci", action="store_true", help="Set to TOP SECRET//SCI"
     )
 
     args = parser.parse_args()
