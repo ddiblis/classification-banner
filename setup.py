@@ -49,5 +49,9 @@ environments such as GNOME2, GNOME3, KDE, twm, icewm, and Cinnamon.""",
             'classification-banner=classification_banner.banner:main',
         ],
     },
+    data_files=[
+        ("/etc/classification-banner", ["contrib/banner.conf"]),
+        ("/etc/xdg/autostart", ["contrib/classification-banner.desktop"]),
+    ],
     scripts=["bin/classification-banner"],
 )
