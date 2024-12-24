@@ -53,6 +53,7 @@ For your convenience you can set the banner type using the following commands:
 (Doing so will automatically set the text and color profile for the banner correctly)
 
 * -u, --unclassified
+* -cui, --cui
 * -c, --confidential
 * -s, --secret
 * -ts, --top_secret
@@ -77,6 +78,7 @@ Command line options that correspond to the above settings (use `classification-
 -B, --bgcolor
 -S, --style
 -u, --unclassified
+-cui, --cui
 -c, --confidential
 -s, --secret
 -ts, --top_secret
