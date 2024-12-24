@@ -19,7 +19,7 @@ to view after that
 
 # Installation
 
-## Fedora
+<!-- ## Fedora
 `classification-banner` can be found in the Fedora repositories and installed
 via `dnf`:
 ```sh
@@ -31,7 +31,7 @@ dnf -y install classification-banner
 via `yum`:
 ```sh
 yum -y install classification-banner
-```
+``` -->
 
 ## Source
 To install directly from source, run the following command:
@@ -44,37 +44,52 @@ python setup.py install
 Options should be placed in the `/etc/classification-banner/banner.conf` file.
 
 * `message` - The classification level to display (Default: `UNCLASSIFIED`)
-* `foreground` - Foreground color of the text to display (Default: `#FFFFFF` "White")
-* `background` - Background color of the banner the text is against (Default: `#007A33` "Green")
-* `font` - Font face to use for the displayed text (Default: `liberation-sans`)
-* `size` - Size of font to use for text (Default: `small`)
-* `weight` - Bold or normal (Default: `bold`)
-* `show_top` - Show top banner (Default: `True`)
-* `show_bottom` - Show bottom banner (Default: `True`)
-* `horizontal_resolution` - Manually Set Horiztonal Resolution (OPTIONAL) [if hres is set, vres required]
-* `vertical_resolution` - Manually Set Horiztonal Resolution (OPTIONAL) [if vres is set, hres required]
-* `sys_info` - Show user and hostname in the top banner (Default: `False`)
-* `opacity` - Sets opacity - for composted window managers only (OPTIONAL) [float - range 0 .. 1] (Default: `0.75`)
-* `esc` - Enable/Disable the 'ESC to hide' message (Default: `True` (enabled))
-* `spanning` - Enable banner(s) to span across screens as a single banner (Default: `False`)
+* `fgcolor` - Foreground color of the text to display (Default: `#FFFFFF` "White")
+* `bgcolor` - Background color of the banner the text is against (Default: `#007A33` "Green")
+* `style` - Syle of banner, choose between Modern and Classic
+##
+# For your convenience you can set the banner type using the following commands:
+# (Doing so will automatically set the text and color profile for the banner correctly)
+* -u, --unclassified
+* -c, --confidential
+* -s, --secret
+* -ts, --top_secret
+* -tssci, --ts_sci
+#* `font` - Font face to use for the displayed text (Default: `liberation-sans`)
+#* `size` - Size of font to use for text (Default: `small`)
+#* `weight` - Bold or normal (Default: `bold`)
+#* `show_top` - Show top banner (Default: `True`)
+#* `show_bottom` - Show bottom banner (Default: `True`)
+#* `horizontal_resolution` - Manually Set Horiztonal Resolution (OPTIONAL) [if hres is set, vres required]
+#* `vertical_resolution` - Manually Set Horiztonal Resolution (OPTIONAL) [if vres is set, hres required]
+#* `sys_info` - Show user and hostname in the top banner (Default: `False`)
+#* `opacity` - Sets opacity - for composted window managers only (OPTIONAL) [float - range 0 .. 1] (Default: `0.75`)
+#* `esc` - Enable/Disable the 'ESC to hide' message (Default: `True` (enabled))
+#* `spanning` - Enable banner(s) to span across screens as a single banner (Default: `False`)
 
 Command line options that correspond to the above settings (use `classification-banner --help` for more information):
 
 ```
--m, --message
--f, --fgcolor
--b, --bgcolor
---font
---size
---weight
---hide-top
---hide-bottom
--x, --hres
--y, --vres
---system-info
--o, --opacity
---disable-esc
---enable-spanning
+-M, --message
+-F, --fgcolor
+-B, --bgcolor
+-S, --style
+-u, --unclassified
+-c, --confidential
+-s, --secret
+-ts, --top_secret
+-tssci, --ts_sci
+#--font
+#--size
+#--weight
+#--hide-top
+#--hide-bottom
+#-x, --hres
+#-y, --vres
+#--system-info
+#-o, --opacity
+#--disable-esc
+#--enable-spanning
 ```
 
 # Examples

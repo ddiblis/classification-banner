@@ -1,2 +1,0 @@
-[console_scripts]
-classification-banner = classification_banner.banner:main

@@ -76,7 +76,7 @@ def configure():
         "-u", "--unclassified", action="store_true", help="Set to UNCLASSIFIED"
     )
     parser.add_argument(
-        "-ts", "--top-secret", action="store_true", help="Set to TOP SECRET"
+        "-ts", "--top_secret", action="store_true", help="Set to TOP SECRET"
     )
     parser.add_argument(
         "-c", "--confidential", action="store_true", help="Set to CONFIDENTIAL"
