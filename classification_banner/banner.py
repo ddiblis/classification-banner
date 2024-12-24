@@ -17,18 +17,27 @@ if "DISPLAY" not in os.environ:
 
 # Preset configurations
 PRESETS = {
-    "u": {"message": "UNCLASSIFIED", "fgcolor": "#FFFFFF", "bgcolor": "#007A33"},
+    "unclassified": {
+        "message": "UNCLASSIFIED",
+        "fgcolor": "#FFFFFF",
+        "bgcolor": "#007a33",
+    },
+    "cui": {
+        "message": "CUI",
+        "fgcolor": "#FFFFFF",
+        "bgcolor": "#502b85",
+    },
     "confidential": {
         "message": "CONFIDENTIAL",
         "fgcolor": "#FFFFFF",
-        "bgcolor": "#0033A0",
+        "bgcolor": "#0033a0",
     },
-    "secret": {"message": "SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#C8102E"},
-    "ts": {"message": "TOP SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#FF671F"},
+    "secret": {"message": "SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#c8102e"},
+    "top_secret": {"message": "TOP SECRET", "fgcolor": "#FFFFFF", "bgcolor": "#ff8c00"},
     "ts_sci": {
         "message": "TOP SECRET//SCI",
         "fgcolor": "#000000",
-        "bgcolor": "#F7EA48",
+        "bgcolor": "#fce83a",
     },
 }
 
@@ -76,12 +85,18 @@ def configure():
         "-u", "--unclassified", action="store_true", help="Set to UNCLASSIFIED"
     )
     parser.add_argument(
-        "-ts", "--top_secret", action="store_true", help="Set to TOP SECRET"
+        "-cui",
+        "--cui",
+        action="store_true",
+        help="Set to Controlled Unclassified Information",
     )
     parser.add_argument(
         "-c", "--confidential", action="store_true", help="Set to CONFIDENTIAL"
     )
     parser.add_argument("-s", "--secret", action="store_true", help="Set to SECRET")
+    parser.add_argument(
+        "-ts", "--top_secret", action="store_true", help="Set to TOP SECRET"
+    )
     parser.add_argument(
         "-tssci", "--ts_sci", action="store_true", help="Set to TOP SECRET//SCI"
     )
@@ -90,10 +105,11 @@ def configure():
 
     # Apply the preset values based on the flags
     preset_flags = {
-        "unclassified": "u",
-        "top_secret": "ts",
+        "unclassified": "unclassified",
+        "cui": "cui",
         "confidential": "confidential",
         "secret": "secret",
+        "top_secret": "top_secret",
         "ts_sci": "ts_sci",
     }
 
