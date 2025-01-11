@@ -2,7 +2,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-VERSION = "1.7.1"
+VERSION = "1.8.0"
 
 PACKAGE_VERSION = {
     "classification-banner": "classification-banner == {0}".format(VERSION),

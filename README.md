@@ -17,6 +17,13 @@ Selecting the classification window and pressing the ESC key
 will temporarily hide the window for 15 seconds, it will return
 to view after that
 
+# Why convert to Qt?
+While gtk3 was wonderful for what it did, gtk4 is a mess. It's meant as a replacement to make thing "lightweight". And they succeded. Now it's featureless. Not only that, but now it's being forced on us as of rhel9 as a default and will be the only option avaliable through wayland in rhel10. I hate that. It breaks everything. So I converted the package to using Qt while losing no functionality from gtk3. This WILL work as intended with wayland unlike the current implementation which breaks in many ways on gtk4.
+Issues triggered by gtk4 when the banner is not using Qt (These features have been removed entirely):
+- No ability to keep banner on top of all other programs
+- Banner behaves like it's a normal program you can alt+tab to... Seriously.
+- NO CLICK THROUGH which means the banner hinders any and all programs near it.
+
 # Installation
 
 <!-- ## Fedora
@@ -98,7 +105,7 @@ Command line options that correspond to the above settings (use `classification-
 
 
 # Examples
-
+(This file gets automatically installed into the directory mentioned below now for your convenience, feel free to edit it)
 These are examples for the configuration of the Classification Banner
 using the `/etc/classification-banner/banner.conf` file for various classifications
 based upon generally accepted color guidelines in the DoD/IC.
@@ -155,7 +162,7 @@ based upon generally accepted color guidelines in the DoD/IC.
 ```
 
 # Autostart
-
+(As of 1.7.1, this gets automatically dropped into the directory mentioned below, meaning you don't have to build this out yourself)
 To auto-start the classification-banner script on the GNOME Desktop,
 create the file `/etc/xdg/autostart/classification-banner.desktop`
 with the following contents:
