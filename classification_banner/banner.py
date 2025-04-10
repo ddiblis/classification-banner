@@ -3,8 +3,8 @@ import os
 import argparse
 import configparser
 from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow
-from PyQt5.QtGui import QColor, QFont, QPalette, QRegion
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor, QFont, QPalette, QRegion, QGuiApplication
+from PyQt5.QtCore import Qt, QTimer
 
 CONF_FILE = "/etc/classification-banner/banner.conf"
 
@@ -46,7 +46,7 @@ def configure():
         "message": conf.get("global", "message", fallback="UNCLASSIFIED"),
         "fgcolor": conf.get("global", "fgcolor", fallback="#FFFFFF"),
         "bgcolor": conf.get("global", "bgcolor", fallback="#007A33"),
-        "style": conf.get("global", "style", fallback="Modern"),
+        "style": conf.get("global", "style", fallback="Modern")
     }
 
     parser = argparse.ArgumentParser()
@@ -125,12 +125,12 @@ class AlwaysOnBanner(QMainWindow):
         self.bgcolor = QColor(bgcolor)
 
         self._setup_geometry(position, screen, style)
-        self._setup_label(message, style)
+        self._setup_label(message)
 
     def _setup_geometry(self, position, screen, style):
         screen_geom = screen.geometry()
-        banner_height = 20 if style == "Modern" else 15
-        adjusted_width = screen_geom.width() // 15 if style == "Modern" else screen_geom.width()
+        banner_height = 15
+        adjusted_width = screen_geom.width() // 30 if style == "Modern" else screen_geom.width()
         
         top_offset = 45 if style == "Modern" else 0
         bottom_offset = 45 if style == "Modern" else 0
@@ -141,7 +141,7 @@ class AlwaysOnBanner(QMainWindow):
             right_x = screen_geom.right() - adjusted_width
             self.setGeometry(right_x, screen_geom.bottom() - banner_height - bottom_offset, adjusted_width, banner_height)
 
-    def _setup_label(self, message, style):
+    def _setup_label(self, message):
         label = QLabel(message, self)
         label.setAlignment(Qt.AlignCenter)
         label.setGeometry(self.rect())
@@ -165,20 +165,41 @@ class AlwaysOnBanner(QMainWindow):
 def main():
     options = configure()
     app = QApplication(sys.argv)
-
-    screens = app.screens()
     banners = []
 
+    def update_banners(*args):
+        print("detected display Change")
+        print("screens current present: ",  app.screens())
+        print("number of banners: ", len(banners))
+        for banner in banners:
+            banner.close()
+        banners.clear()
+
+        for screen in app.screens():
+            top_banner = AlwaysOnBanner("top", screen, options.message, options.fgcolor, options.bgcolor, options.style)
+            top_banner.show_banner()
+            banners.append(top_banner)
+
+           # if options.style == "Modern":
+           #     bottom_banner = AlwaysOnBanner("bottom", screen, options.message, options.fgcolor, options.bgcolor, options.style)
+           #     bottom_banner.show_banner()
+           #     banners.append(bottom_banner)
+
+    screens = app.screens()
     for screen in screens:
         top_banner = AlwaysOnBanner("top", screen, options.message, options.fgcolor, options.bgcolor, options.style)
         top_banner.show_banner()
         banners.append(top_banner)
 
-        if options.style == "Modern":
-            bottom_banner = AlwaysOnBanner("bottom", screen, options.message, options.fgcolor, options.bgcolor, options.style)
-            bottom_banner.show_banner()
-            banners.append(bottom_banner)
+       # if options.style == "Modern":
+       #     bottom_banner = AlwaysOnBanner("bottom", screen, options.message, options.fgcolor, options.bgcolor, options.style)
+       #     bottom_banner.show_banner()
+       #     banners.append(bottom_banner)
 
+        screen.geometryChanged.connect(lambda: QTimer.singleShot(1000, update_banners))
+
+    app.screenAdded.connect(lambda: QTimer.singleShot(1000, update_banners))
+    app.screenRemoved.connect(lambda: QTimer.singleShot(1000, update_banners))
     sys.exit(app.exec_())
 
 
