@@ -94,3 +94,67 @@ class Banner {
 	      _init();
 	    }
 };
+
+
+#include <QLabel>
+#include <QEvent>
+#include <QEnterEvent>
+#include <QApplication>
+#include <QMouseEvent>
+#include <QCoreApplication>
+
+class HoverableLabel : public QLabel {
+public:
+    explicit HoverableLabel(const QString &text = "", QWidget *parent = nullptr)
+        : QLabel(text, parent) {
+        // Ensure we can receive hover events.
+        setAttribute(Qt::WA_Hover);
+    }
+
+protected:
+    // Hover: change opacity.
+    void enterEvent(QEnterEvent *event) override { 
+        setWindowOpacity(0.3);
+        QLabel::enterEvent(event);
+    }
+
+    void leaveEvent(QEvent *event) override {
+        setWindowOpacity(1.0);
+        QLabel::leaveEvent(event);
+    }
+
+    // Forward clicks to underlying widget.
+    void mousePressEvent(QMouseEvent *event) override {
+        // Find the widget below the banner at this global position.
+        QWidget *underlying = QApplication::widgetAt(event->globalPos());
+        if (underlying && underlying != this) {
+            // Map coordinates from global to the target widget's coordinate system.
+            QPoint targetPos = underlying->mapFromGlobal(event->globalPos());
+            QMouseEvent forwardedEvent(event->type(),
+                                       targetPos,
+                                       event->globalPos(),
+                                       event->button(),
+                                       event->buttons(),
+                                       event->modifiers());
+            QCoreApplication::sendEvent(underlying, &forwardedEvent);
+        }
+        // Optionally, mark this event as accepted (or call ignore(), depending on your logic).
+        event->accept();
+    }
+
+    // Similarly, you may want to forward mouseReleaseEvent.
+    void mouseReleaseEvent(QMouseEvent *event) override {
+        QWidget *underlying = QApplication::widgetAt(event->globalPos());
+        if (underlying && underlying != this) {
+            QPoint targetPos = underlying->mapFromGlobal(event->globalPos());
+            QMouseEvent forwardedEvent(event->type(),
+                                       targetPos,
+                                       event->globalPos(),
+                                       event->button(),
+                                       event->buttons(),
+                                       event->modifiers());
+            QCoreApplication::sendEvent(underlying, &forwardedEvent);
+        }
+        event->accept();
+    }
+};
