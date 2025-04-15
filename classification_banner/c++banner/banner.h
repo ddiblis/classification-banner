@@ -95,24 +95,25 @@ class Banner {
 	    }
 };
 
-
+//////////////////////////////////////////////////////////////////////////////////////
 #include <QLabel>
 #include <QEvent>
 #include <QEnterEvent>
 #include <QApplication>
 #include <QMouseEvent>
 #include <QCoreApplication>
+#include <QGuiApplication>
+#include <sstream>
 
 class HoverableLabel : public QLabel {
 public:
     explicit HoverableLabel(const QString &text = "", QWidget *parent = nullptr)
         : QLabel(text, parent) {
-        // Ensure we can receive hover events.
+        // Optional: Enable hover events.
         setAttribute(Qt::WA_Hover);
     }
 
 protected:
-    // Hover: change opacity.
     void enterEvent(QEnterEvent *event) override { 
         setWindowOpacity(0.3);
         QLabel::enterEvent(event);
@@ -123,38 +124,50 @@ protected:
         QLabel::leaveEvent(event);
     }
 
-    // Forward clicks to underlying widget.
     void mousePressEvent(QMouseEvent *event) override {
-        // Find the widget below the banner at this global position.
-        QWidget *underlying = QApplication::widgetAt(event->globalPos());
-        if (underlying && underlying != this) {
-            // Map coordinates from global to the target widget's coordinate system.
-            QPoint targetPos = underlying->mapFromGlobal(event->globalPos());
-            QMouseEvent forwardedEvent(event->type(),
-                                       targetPos,
-                                       event->globalPos(),
-                                       event->button(),
-                                       event->buttons(),
-                                       event->modifiers());
-            QCoreApplication::sendEvent(underlying, &forwardedEvent);
+        // Check if both Ctrl and Alt are pressed.
+        if ((event->modifiers() & Qt::ControlModifier) && (event->modifiers() & Qt::AltModifier)) {
+            // Using globalPosition() and converting QPointF to QPoint.
+            QPoint globalPos = event->globalPosition().toPoint();
+            // Find the underlying widget at the event's global position.
+            QWidget *underlying = QApplication::widgetAt(globalPos);
+            if (underlying && underlying != this) {
+                QPoint targetPos = underlying->mapFromGlobal(globalPos);
+                QMouseEvent forwardedEvent(
+                    event->type(),
+                    targetPos,
+                    globalPos,
+                    event->button(),
+                    event->buttons(),
+                    event->modifiers()
+                );
+                QCoreApplication::sendEvent(underlying, &forwardedEvent);
+            }
+            event->accept();
+        } else {
+            QLabel::mousePressEvent(event);
         }
-        // Optionally, mark this event as accepted (or call ignore(), depending on your logic).
-        event->accept();
     }
 
-    // Similarly, you may want to forward mouseReleaseEvent.
     void mouseReleaseEvent(QMouseEvent *event) override {
-        QWidget *underlying = QApplication::widgetAt(event->globalPos());
-        if (underlying && underlying != this) {
-            QPoint targetPos = underlying->mapFromGlobal(event->globalPos());
-            QMouseEvent forwardedEvent(event->type(),
-                                       targetPos,
-                                       event->globalPos(),
-                                       event->button(),
-                                       event->buttons(),
-                                       event->modifiers());
-            QCoreApplication::sendEvent(underlying, &forwardedEvent);
+        if ((event->modifiers() & Qt::ControlModifier) && (event->modifiers() & Qt::AltModifier)) {
+            QPoint globalPos = event->globalPosition().toPoint();
+            QWidget *underlying = QApplication::widgetAt(globalPos);
+            if (underlying && underlying != this) {
+                QPoint targetPos = underlying->mapFromGlobal(globalPos);
+                QMouseEvent forwardedEvent(
+                    event->type(),
+                    targetPos,
+                    globalPos,
+                    event->button(),
+                    event->buttons(),
+                    event->modifiers()
+                );
+                QCoreApplication::sendEvent(underlying, &forwardedEvent);
+            }
+            event->accept();
+        } else {
+            QLabel::mouseReleaseEvent(event);
         }
-        event->accept();
     }
 };
