@@ -134,28 +134,30 @@ int main(int argc, char *argv[]) {
     QList<QScreen*> screens = app.screens();
     std::vector<Banner*> banners;
 
-    for (int i = 0; i < screens.size(); i++) {
-//      banners.push_back(new Banner(
-//	                      "top", 
-//	                      screens[i], 
-//	                      bannerConfig.message, 
-//	                      bannerConfig.bgcolour, 
-//	                      bannerConfig.fgcolour, 
-//	                      bannerConfig.style
-//	                    ));
-//      banners.push_back(new Banner(
-//			      "bottom", 
-//		              screens[i], 
-//		              bannerConfig.message, 
-//		              bannerConfig.bgcolour, 
-//		              bannerConfig.fgcolour, 
-//		              bannerConfig.style
-//			    ));
-      createBanners(banners, screens[i], bannerConfig);
-      //screens[i] -> geometryChanged.connect(QTimer::singleShot(1000, screens[i], updateBanners(banners, screens[i], bannerConfig))); 
-      //screens[i] -> connect(screens[i], &QScreen::screenAdded, screens[i], [=]() {
-      //  QTimer::singleShot(1000, screens[i], SLOT(updateBanners(banners, screens[i], bannerConfig))); 
-      //});
+   for (QScreen* screen : screens) {
+        createBanners(banners, screen, bannerConfig);
+
+        QObject::connect(screen, &QScreen::geometryChanged,
+                         [screen, &banners, bannerConfig]() {
+            QTimer::singleShot(1000, [screen, &banners, bannerConfig]() {
+                updateBanners(banners, screen, bannerConfig);
+            });
+        });
+    }
+
+    QObject::connect(&app, &QGuiApplication::screenAdded,
+                     [&app, &banners, bannerConfig](QScreen* screen) {
+        QTimer::singleShot(1000, [screen, &banners, bannerConfig]() {
+            updateBanners(banners, screen, bannerConfig);
+        });
+    });
+
+    QObject::connect(&app, &QGuiApplication::screenRemoved,
+                     [&app, &banners, bannerConfig](QScreen* screen) {
+        QTimer::singleShot(1000, [&banners, bannerConfig, screen]() {
+            updateBanners(banners, screen, bannerConfig);
+        });
+    });
     }
 
     return app.exec();
