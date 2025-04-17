@@ -21,6 +21,12 @@ struct BannerConfig {
     string style = "Modern";
 };
 
+struct Test {
+  BannerConfig tes = {
+    "TEST",
+  };
+};
+
 BannerConfig configure(int argc, char *argv[]) {
     Presets P;
     Config conf;
@@ -34,15 +40,14 @@ BannerConfig configure(int argc, char *argv[]) {
     }
 
     BannerConfig bannerConfig;
+    //Test test;
+    //cout << test["tes"].message;
 
     try {
-        //const Setting &root = conf.getRoot();
-        //const Setting &global = root["global"];
-        //
-        bannerConfig.message = conf.lookup("global.message").c_str();
-        bannerConfig.fgcolour = conf.lookup("global.fgcolor").c_str();
-        bannerConfig.bgcolour = conf.lookup("global.bgcolor").c_str();
-        bannerConfig.style = conf.lookup("global.style").c_str();
+        bannerConfig.message = conf.lookup("message").c_str();
+        bannerConfig.fgcolour = conf.lookup("fgcolor").c_str();
+        bannerConfig.bgcolour = conf.lookup("bgcolor").c_str();
+        bannerConfig.style = conf.lookup("style").c_str();
     } 
     catch (const SettingNotFoundException &e) {
         cerr << "One or more settings are missing in the configuration file." << endl;
@@ -92,14 +97,80 @@ BannerConfig configure(int argc, char *argv[]) {
     return bannerConfig;
 }
 
-int main(int argc, char *argv[]) {
-  BannerConfig bannerConfig = configure(argc, argv);
-  qputenv("QT_QPA_PLATFORM", QByteArray("xcb"));
-  QApplication app(argc, argv);
-  //std::vector<Banner> banners(10);
-
-  //app.screens();
-  Banner topBanner("top", bannerConfig.message, bannerConfig.bgcolour, bannerConfig.fgcolour, bannerConfig.style);
-  Banner bottomBanner("bottom", bannerConfig.message, bannerConfig.bgcolour, bannerConfig.fgcolour, bannerConfig.style);
-  return app.exec();
+void createBanners(std::vector<Banner*> banners, QScreen* screen, BannerConfig bannerConfig) {
+banners.push_back(new Banner(
+                        "top", 
+                        screen, 
+                        bannerConfig.message, 
+                        bannerConfig.bgcolour, 
+                        bannerConfig.fgcolour, 
+                        bannerConfig.style
+                      ));
+banners.push_back(new Banner(
+  		      "bottom", 
+  	              screen, 
+  	              bannerConfig.message, 
+  	              bannerConfig.bgcolour, 
+  	              bannerConfig.fgcolour, 
+  	              bannerConfig.style
+  		    ));
 }
+
+void updateBanners(std::vector<Banner*> banners, QScreen* screen, BannerConfig bannerConfig) {
+  for (int i = 0; i < banners.size(); i++) {
+    banners[i] -> close();
+  }
+  banners.clear();
+  banners.shrink_to_fit();
+  createBanners(banners, screen, bannerConfig);
+}
+
+
+int main(int argc, char *argv[]) {
+    BannerConfig bannerConfig = configure(argc, argv);
+    qputenv("QT_QPA_PLATFORM", QByteArray("xcb"));
+    QApplication app(argc, argv);
+
+    QList<QScreen*> screens = app.screens();
+    std::vector<Banner*> banners;
+
+    for (int i = 0; i < screens.size(); i++) {
+//      banners.push_back(new Banner(
+//	                      "top", 
+//	                      screens[i], 
+//	                      bannerConfig.message, 
+//	                      bannerConfig.bgcolour, 
+//	                      bannerConfig.fgcolour, 
+//	                      bannerConfig.style
+//	                    ));
+//      banners.push_back(new Banner(
+//			      "bottom", 
+//		              screens[i], 
+//		              bannerConfig.message, 
+//		              bannerConfig.bgcolour, 
+//		              bannerConfig.fgcolour, 
+//		              bannerConfig.style
+//			    ));
+      createBanners(banners, screens[i], bannerConfig);
+      //screens[i] -> geometryChanged.connect(QTimer::singleShot(1000, screens[i], updateBanners(banners, screens[i], bannerConfig))); 
+      //screens[i] -> connect(screens[i], &QScreen::screenAdded, screens[i], [=]() {
+      //  QTimer::singleShot(1000, screens[i], SLOT(updateBanners(banners, screens[i], bannerConfig))); 
+      //});
+    }
+
+    return app.exec();
+
+}
+
+//int main(int argc, char *argv[]) {
+//  BannerConfig bannerConfig = configure(argc, argv);
+//  qputenv("QT_QPA_PLATFORM", QByteArray("xcb"));
+//  QApplication app(argc, argv);
+//
+//  QList<QScreen*> screens = app.screens();
+//  for (int i = 0; i < screens.size(); i++) {
+//    Banner topBanner("top", screens[i], bannerConfig.message, bannerConfig.bgcolour, bannerConfig.fgcolour, bannerConfig.style);
+//    Banner bottomBanner("bottom", screens[i], bannerConfig.message, bannerConfig.bgcolour, bannerConfig.fgcolour, bannerConfig.style);
+//  }
+//  return app.exec();
+//}

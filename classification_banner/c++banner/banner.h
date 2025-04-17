@@ -2,33 +2,15 @@
 #include <QEvent>
 #include <QEnterEvent>
 
-class HoverableLabel : public QLabel {
-public:
-    explicit HoverableLabel(const QString &text = "", QWidget *parent = nullptr)
-        : QLabel(text, parent) {
-    }
-
-protected:
-    void enterEvent(QEnterEvent *event) override { 
-        setWindowOpacity(0.3);
-        QLabel::enterEvent(event);
-    }
-
-    void leaveEvent(QEvent *event) override {
-        setWindowOpacity(1.0);
-        QLabel::leaveEvent(event);
-    }
-};
-
 class Banner {
   private:
     std::string style;
     std::string position;
+    QScreen*& screen;
     std::string bgColour;
     std::string fgColour;
     std::string message;
-    HoverableLabel *banner;
-    //QLabel *banner;
+    QLabel *banner;
 
     void _setStyle() {
       std::ostringstream styleOss;
@@ -39,7 +21,8 @@ class Banner {
     }
 
     void _setGeometry() {
-      QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+      //QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+      QRect screenGeometry = screen->geometry();
       int bannerHeight = 20;
       int screenWidth = screenGeometry.width();
       // Judge me only if you can do better
@@ -48,17 +31,17 @@ class Banner {
       int bottomOffset = style == "Modern" ? 45 : 0; 
 
       if (position == "top") {
-        banner -> setGeometry(0, 0 + topOffset, bannerWidth, bannerHeight);
+        banner -> setGeometry(screenGeometry.left(), screenGeometry.top() + topOffset, bannerWidth, bannerHeight);
       } else {
 	int rightX = screenGeometry.right() - bannerWidth;
         banner -> setGeometry(rightX, screenGeometry.bottom() - bannerHeight - bottomOffset, bannerWidth, bannerHeight);
       }
     }
 
+
     void _init() {
       QString qMessage = QString::fromStdString(message);
-      banner = new HoverableLabel (qMessage);
-      //banner = new QLabel (qMessage);
+      banner = new QLabel(qMessage);
 
       _setStyle();
 
@@ -73,13 +56,20 @@ class Banner {
             	  );
 
       _setGeometry();
-      
+     
       banner -> show();
     }
 
+
   public:
+    
+    void close() {
+      QTimer::singleShot(0, banner, &QLabel::close);
+    }
+
     Banner(
 	    std::string positionInput, 
+	    QScreen*& screenInput,
 	    std::string messageInput,
 	    std::string bgColourInput,
 	    std::string fgColourInput,
@@ -87,6 +77,7 @@ class Banner {
 	  ) :
 	    style(styleInput), 
 	    position(positionInput), 
+	    screen(screenInput),
 	    message(messageInput), 
 	    bgColour(bgColourInput),
 	    fgColour(fgColourInput),
@@ -95,79 +86,3 @@ class Banner {
 	    }
 };
 
-//////////////////////////////////////////////////////////////////////////////////////
-#include <QLabel>
-#include <QEvent>
-#include <QEnterEvent>
-#include <QApplication>
-#include <QMouseEvent>
-#include <QCoreApplication>
-#include <QGuiApplication>
-#include <sstream>
-
-class HoverableLabel : public QLabel {
-public:
-    explicit HoverableLabel(const QString &text = "", QWidget *parent = nullptr)
-        : QLabel(text, parent) {
-        // Optional: Enable hover events.
-        setAttribute(Qt::WA_Hover);
-    }
-
-protected:
-    void enterEvent(QEnterEvent *event) override { 
-        setWindowOpacity(0.3);
-        QLabel::enterEvent(event);
-    }
-
-    void leaveEvent(QEvent *event) override {
-        setWindowOpacity(1.0);
-        QLabel::leaveEvent(event);
-    }
-
-    void mousePressEvent(QMouseEvent *event) override {
-        // Check if both Ctrl and Alt are pressed.
-        if ((event->modifiers() & Qt::ControlModifier) && (event->modifiers() & Qt::AltModifier)) {
-            // Using globalPosition() and converting QPointF to QPoint.
-            QPoint globalPos = event->globalPosition().toPoint();
-            // Find the underlying widget at the event's global position.
-            QWidget *underlying = QApplication::widgetAt(globalPos);
-            if (underlying && underlying != this) {
-                QPoint targetPos = underlying->mapFromGlobal(globalPos);
-                QMouseEvent forwardedEvent(
-                    event->type(),
-                    targetPos,
-                    globalPos,
-                    event->button(),
-                    event->buttons(),
-                    event->modifiers()
-                );
-                QCoreApplication::sendEvent(underlying, &forwardedEvent);
-            }
-            event->accept();
-        } else {
-            QLabel::mousePressEvent(event);
-        }
-    }
-
-    void mouseReleaseEvent(QMouseEvent *event) override {
-        if ((event->modifiers() & Qt::ControlModifier) && (event->modifiers() & Qt::AltModifier)) {
-            QPoint globalPos = event->globalPosition().toPoint();
-            QWidget *underlying = QApplication::widgetAt(globalPos);
-            if (underlying && underlying != this) {
-                QPoint targetPos = underlying->mapFromGlobal(globalPos);
-                QMouseEvent forwardedEvent(
-                    event->type(),
-                    targetPos,
-                    globalPos,
-                    event->button(),
-                    event->buttons(),
-                    event->modifiers()
-                );
-                QCoreApplication::sendEvent(underlying, &forwardedEvent);
-            }
-            event->accept();
-        } else {
-            QLabel::mouseReleaseEvent(event);
-        }
-    }
-};
