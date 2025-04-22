@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o CMakeFiles/banner-app.dir/main.cpp.o -o banner-app  /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6.2.4 -lconfig++ /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.2.4 /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.2.4 /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so 
