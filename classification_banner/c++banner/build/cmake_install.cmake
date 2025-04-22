@@ -1,4 +1,4 @@
-# Install script for directory: /home/q/src/classification-banner/classification_banner/c++banner
+# Install script for directory: /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/q/src/classification-banner/classification_banner/c++banner/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

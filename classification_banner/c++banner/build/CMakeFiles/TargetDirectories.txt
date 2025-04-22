@@ -1,4 +1,4 @@
-/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app.dir
-/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles/edit_cache.dir
-/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles/rebuild_cache.dir
-/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app_autogen.dir
+/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app.dir
+/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles/edit_cache.dir
+/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles/rebuild_cache.dir
+/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app_autogen.dir

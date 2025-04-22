@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/q/src/classification-banner/classification_banner/c++banner
+CMAKE_SOURCE_DIR = /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/q/src/classification-banner/classification_banner/c++banner/build
+CMAKE_BINARY_DIR = /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build
 
 # Utility rule file for banner-app_autogen.
 
@@ -67,8 +67,8 @@ include CMakeFiles/banner-app_autogen.dir/compiler_depend.make
 include CMakeFiles/banner-app_autogen.dir/progress.make
 
 CMakeFiles/banner-app_autogen:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target banner-app"
-	/usr/bin/cmake -E cmake_autogen /home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app_autogen.dir/AutogenInfo.json ""
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target banner-app"
+	/usr/bin/cmake -E cmake_autogen /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app_autogen.dir/AutogenInfo.json ""
 
 banner-app_autogen: CMakeFiles/banner-app_autogen
 banner-app_autogen: CMakeFiles/banner-app_autogen.dir/build.make
@@ -83,6 +83,6 @@ CMakeFiles/banner-app_autogen.dir/clean:
 .PHONY : CMakeFiles/banner-app_autogen.dir/clean
 
 CMakeFiles/banner-app_autogen.dir/depend:
-	cd /home/q/src/classification-banner/classification_banner/c++banner/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/q/src/classification-banner/classification_banner/c++banner /home/q/src/classification-banner/classification_banner/c++banner /home/q/src/classification-banner/classification_banner/c++banner/build /home/q/src/classification-banner/classification_banner/c++banner/build /home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app_autogen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app_autogen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/banner-app_autogen.dir/depend
 

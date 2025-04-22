@@ -1,5 +1,5 @@
 CMakeFiles/banner-app.dir/main.cpp.o: \
- /home/q/src/classification-banner/classification_banner/c++banner/main.cpp \
+ /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/main.cpp \
  /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QApplication \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qapplication.h \
@@ -366,8 +366,8 @@ CMakeFiles/banner-app.dir/main.cpp.o: \
  /usr/include/getopt.h /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_ext.h \
  /usr/include/libconfig.h++ \
- /home/q/src/classification-banner/classification_banner/c++banner/presets.h \
- /home/q/src/classification-banner/classification_banner/c++banner/banner.h \
+ /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/presets.h \
+ /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/banner.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QEvent \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qcoreevent.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QEnterEvent \

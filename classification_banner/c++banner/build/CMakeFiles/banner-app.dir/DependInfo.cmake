@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/q/src/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp" "CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o.d"
-  "/home/q/src/classification-banner/classification_banner/c++banner/main.cpp" "CMakeFiles/banner-app.dir/main.cpp.o" "gcc" "CMakeFiles/banner-app.dir/main.cpp.o.d"
+  "/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp" "CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o.d"
+  "/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/main.cpp" "CMakeFiles/banner-app.dir/main.cpp.o" "gcc" "CMakeFiles/banner-app.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links.

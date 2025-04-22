@@ -21,34 +21,34 @@ struct BannerConfig {
     string style = "Modern";
 };
 
-struct Test {
-  BannerConfig tes = {
-    "TEST",
-  };
-};
+//struct Test {
+//  BannerConfig tes = {
+//    "TEST",
+//  };
+//};
 
 BannerConfig configure(int argc, char *argv[]) {
     Presets P;
     Config conf;
     // Catch error but do not exit, the conf file should be optional since you can use flags for setting the banner settings
     try {
-        conf.readFile("/etc/classification-banner/banner.conf");
+      conf.readFile("/etc/classification-banner/banner.conf");
     } catch (const FileIOException &fioex) {
-        cerr << "Error reading the configuration file!" << endl;
+      cerr << "Config file not present, falling back on defaults" << endl;
     } catch (const ParseException &pex) {
-        cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << endl;
+      cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << endl;
     }
 
     BannerConfig bannerConfig;
 
     try {
-        bannerConfig.message = conf.lookup("message").c_str();
-        bannerConfig.fgcolour = conf.lookup("fgcolor").c_str();
-        bannerConfig.bgcolour = conf.lookup("bgcolor").c_str();
-        bannerConfig.style = conf.lookup("style").c_str();
+      bannerConfig.message = conf.lookup("message").c_str();
+      bannerConfig.fgcolour = conf.lookup("fgcolor").c_str();
+      bannerConfig.bgcolour = conf.lookup("bgcolor").c_str();
+      bannerConfig.style = conf.lookup("style").c_str();
     } 
     catch (const SettingNotFoundException &e) {
-        cerr << "One or more settings are missing in the configuration file." << endl;
+      cerr << "One or more config is not present, those will be defaulted" << endl;
     }
 
     int opt;
@@ -95,7 +95,7 @@ BannerConfig configure(int argc, char *argv[]) {
     return bannerConfig;
 }
 
-void createBanners(std::vector<Banner*> banners, QScreen* screen, BannerConfig bannerConfig) {
+void createBanners(std::vector<Banner*>& banners, QScreen* screen, BannerConfig& bannerConfig) {
 banners.push_back(new Banner(
                         "top", 
                         screen, 
@@ -114,15 +114,6 @@ banners.push_back(new Banner(
   		    ));
 }
 
-void updateBanners(std::vector<Banner*> banners, QScreen* screen, BannerConfig bannerConfig) {
-  for (Banner* banner : banners) {
-    banner -> close();
-  }
-  banners.clear();
-  banners.shrink_to_fit();
-  createBanners(banners, screen, bannerConfig);
-}
-
 int main(int argc, char *argv[]) {
    BannerConfig bannerConfig = configure(argc, argv);
    qputenv("QT_QPA_PLATFORM", QByteArray("xcb"));
@@ -134,6 +125,7 @@ int main(int argc, char *argv[]) {
            delete b;
        }
        allBanners.clear();
+       allBanners.shrink_to_fit();
    };
    auto rebuildAllBanners = [&]() {
        clearAllBanners();
@@ -141,92 +133,24 @@ int main(int argc, char *argv[]) {
            createBanners(allBanners, screen, bannerConfig);
        }
    };
-   rebuildAllBanners();  // initial setup
-   //Handle screen geometry changes
+   rebuildAllBanners();
    for (QScreen* screen : app.screens()) {
-       QObject::connect(screen, &QScreen::geometryChanged, [&]() {
-           QTimer::singleShot(1000, rebuildAllBanners);
+     QObject::connect(screen, &QScreen::geometryChanged,
+       [screen, &rebuildAllBanners]() {
+         QTimer::singleShot(5000, rebuildAllBanners);
        });
    }
-   // Handle screen add/remove
-   //QObject::connect(&app, &QGuiApplication::screenAdded, [&](QScreen*) {
-   //    QTimer::singleShot(15000, rebuildAllBanners);
-   //});
-   //QObject::connect(&app, &QGuiApplication::screenRemoved, [&](QScreen*) {
-   //    QTimer::singleShot(15000, rebuildAllBanners);
-   //});
+
+   QObject::connect(&app, &QGuiApplication::screenAdded,
+     [&rebuildAllBanners]() {
+       QTimer::singleShot(15000, rebuildAllBanners);
+     });
+   
+   QObject::connect(&app, &QGuiApplication::screenRemoved,
+     [&rebuildAllBanners]() {
+       QTimer::singleShot(15000, rebuildAllBanners);
+     });
+
    return app.exec();
 }
 
-//int main(int argc, char *argv[]) {
-//   BannerConfig bannerConfig = configure(argc, argv);
-//   qputenv("QT_QPA_PLATFORM", QByteArray("xcb"));
-//   QApplication app(argc, argv);
-//   QMap<QScreen*, std::vector<Banner*>> screenBanners;
-//   auto createAndTrack = [&](QScreen* screen) {
-//       std::vector<Banner*> banners;
-//       createBanners(banners, screen, bannerConfig);
-//       screenBanners[screen] = banners;
-//       QObject::connect(screen, &QScreen::geometryChanged, [=, &screenBanners, bannerConfig]() {
-//           QTimer::singleShot(1000, [=, &screenBanners, bannerConfig]() {
-//               for (Banner* b : screenBanners[screen]) delete b;
-//               screenBanners[screen].clear();
-//               createBanners(screenBanners[screen], screen, bannerConfig);
-//           });
-//       });
-//   };
-//   for (QScreen* screen : app.screens()) {
-//       createAndTrack(screen);
-//   }
-//   QObject::connect(&app, &QGuiApplication::screenAdded, [&](QScreen* screen) {
-//       QTimer::singleShot(1000, [=, &screenBanners, bannerConfig]() {
-//           createAndTrack(screen);
-//       });
-//   });
-//   QObject::connect(&app, &QGuiApplication::screenRemoved, [&](QScreen* screen) {
-//       QTimer::singleShot(1000, [=, &screenBanners]() {
-//           if (screenBanners.contains(screen)) {
-//               for (Banner* b : screenBanners[screen]) delete b;
-//               screenBanners.remove(screen);
-//           }
-//       });
-//   });
-//   return app.exec();
-//}
-
-//int main(int argc, char *argv[]) {
-//    BannerConfig bannerConfig = configure(argc, argv);
-//    qputenv("QT_QPA_PLATFORM", QByteArray("xcb"));
-//    QApplication app(argc, argv);
-//
-//    QList<QScreen*> screens = app.screens();
-//    std::vector<Banner*> banners;
-//
-//   for (QScreen* screen : screens) {
-//        createBanners(banners, screen, bannerConfig);
-//
-//        QObject::connect(screen, &QScreen::geometryChanged,
-//                         [screen, &banners, bannerConfig]() {
-//            QTimer::singleShot(1000, [screen, &banners, bannerConfig]() {
-//                updateBanners(banners, screen, bannerConfig);
-//            });
-//        });
-//    }
-//
-//    QObject::connect(&app, &QGuiApplication::screenAdded,
-//                     [&app, &banners, bannerConfig](QScreen* screen) {
-//        QTimer::singleShot(1000, [screen, &banners, bannerConfig]() {
-//            updateBanners(banners, screen, bannerConfig);
-//        });
-//    });
-//
-//    QObject::connect(&app, &QGuiApplication::screenRemoved,
-//                     [&app, &banners, bannerConfig](QScreen* screen) {
-//        QTimer::singleShot(1000, [&banners, bannerConfig, screen]() {
-//            updateBanners(banners, screen, bannerConfig);
-//        });
-//    });
-//
-//    return app.exec();
-//
-//}

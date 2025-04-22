@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/q/src/classification-banner/classification_banner/c++banner
+CMAKE_SOURCE_DIR = /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/q/src/classification-banner/classification_banner/c++banner/build
+CMAKE_BINARY_DIR = /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/banner-app.dir/depend.make
@@ -72,30 +72,30 @@ include CMakeFiles/banner-app.dir/flags.make
 CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o: CMakeFiles/banner-app.dir/flags.make
 CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o: banner-app_autogen/mocs_compilation.cpp
 CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o: CMakeFiles/banner-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o -MF CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o.d -o CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o -c /home/q/src/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o -MF CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o.d -o CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.o -c /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp
 
 CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/q/src/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp > CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp > CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.i
 
 CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/q/src/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp -o CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/banner-app_autogen/mocs_compilation.cpp -o CMakeFiles/banner-app.dir/banner-app_autogen/mocs_compilation.cpp.s
 
 CMakeFiles/banner-app.dir/main.cpp.o: CMakeFiles/banner-app.dir/flags.make
 CMakeFiles/banner-app.dir/main.cpp.o: ../main.cpp
 CMakeFiles/banner-app.dir/main.cpp.o: CMakeFiles/banner-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/banner-app.dir/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/banner-app.dir/main.cpp.o -MF CMakeFiles/banner-app.dir/main.cpp.o.d -o CMakeFiles/banner-app.dir/main.cpp.o -c /home/q/src/classification-banner/classification_banner/c++banner/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/banner-app.dir/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/banner-app.dir/main.cpp.o -MF CMakeFiles/banner-app.dir/main.cpp.o.d -o CMakeFiles/banner-app.dir/main.cpp.o -c /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/main.cpp
 
 CMakeFiles/banner-app.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/banner-app.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/q/src/classification-banner/classification_banner/c++banner/main.cpp > CMakeFiles/banner-app.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/main.cpp > CMakeFiles/banner-app.dir/main.cpp.i
 
 CMakeFiles/banner-app.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/banner-app.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/q/src/classification-banner/classification_banner/c++banner/main.cpp -o CMakeFiles/banner-app.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/main.cpp -o CMakeFiles/banner-app.dir/main.cpp.s
 
 # Object files for target banner-app
 banner__app_OBJECTS = \
@@ -114,7 +114,7 @@ banner-app: /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.2.4
 banner-app: /usr/lib/x86_64-linux-gnu/libGLX.so
 banner-app: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 banner-app: CMakeFiles/banner-app.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable banner-app"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable banner-app"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/banner-app.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -126,6 +126,6 @@ CMakeFiles/banner-app.dir/clean:
 .PHONY : CMakeFiles/banner-app.dir/clean
 
 CMakeFiles/banner-app.dir/depend:
-	cd /home/q/src/classification-banner/classification_banner/c++banner/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/q/src/classification-banner/classification_banner/c++banner /home/q/src/classification-banner/classification_banner/c++banner /home/q/src/classification-banner/classification_banner/c++banner/build /home/q/src/classification-banner/classification_banner/c++banner/build /home/q/src/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build /home/q/src/ssh-banner/classification-banner/classification_banner/c++banner/build/CMakeFiles/banner-app.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/banner-app.dir/depend
 

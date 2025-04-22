@@ -6,7 +6,7 @@ class Banner {
   private:
     std::string style;
     std::string position;
-    QScreen*& screen;
+    QScreen* screen;
     std::string bgColour;
     std::string fgColour;
     std::string message;
@@ -21,7 +21,6 @@ class Banner {
     }
 
     void _setGeometry() {
-      //QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
       QRect screenGeometry = screen->geometry();
       int bannerHeight = 20;
       int screenWidth = screenGeometry.width();
@@ -69,7 +68,7 @@ class Banner {
 
     Banner(
 	    std::string positionInput, 
-	    QScreen*& screenInput,
+	    QScreen* screenInput,
 	    std::string messageInput,
 	    std::string bgColourInput,
 	    std::string fgColourInput,
